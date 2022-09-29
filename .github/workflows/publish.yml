@@ -1,0 +1,24 @@
+name: Create and publish a Pypi package
+
+on:
+  push:
+    branches:
+      - "main"
+
+jobs:
+  build-and-push-package:
+    runs-on: ubuntu-20.04
+    permissions:
+      contents: read
+      packages: write
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - run: python3 -m pip install --upgrade build && python3 -m build
+
+      - name: Publish a Python distribution to PyPI
+        uses: pypa/gh-action-pypi-publish@release/v1
+        with:
+          password: ${{ secrets.PYPI_API_TOKEN }}

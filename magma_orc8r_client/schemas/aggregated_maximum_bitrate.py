@@ -4,7 +4,6 @@
 from pydantic import BaseModel
 
 
-class DNS(BaseModel):
-    dhcp_server_enabled: bool
-    enable_caching: bool
-    local_ttl: int
+class AggregatedMaximumBitrate(BaseModel):
+    max_bandwidth_dl: int
+    max_bandwidth_ul: int

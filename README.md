@@ -10,12 +10,11 @@ pip3 install magma-orc8r-client
 
 ```python
 from magma_orc8r_client.orchestrator import Orc8r
-from magma_orc8r_client.schemas.dns import DNS
-from magma_orc8r_client.schemas.epc import EPC
-from magma_orc8r_client.schemas.cellular import Cellular
-from magma_orc8r_client.schemas.network import Network
-from magma_orc8r_client.schemas.ran import RAN
-from magma_orc8r_client.schemas.tdd_config import TDDConfig
+from magma_orc8r_client.schemas.network_dns_config import NetworkDNSConfig
+from magma_orc8r_client.schemas.network_epc_configs import NetworkEPCConfigs
+from magma_orc8r_client.schemas.network_cellular_configs import NetworkCellularConfigs
+from magma_orc8r_client.schemas.lte_network import LTENetwork
+from magma_orc8r_client.schemas.network_ran_configs import NetworkRANConfigs, TDDConfig
 
 orc8r_client = Orc8r(
     url="https://api.magma.com",
@@ -23,10 +22,10 @@ orc8r_client = Orc8r(
     admin_operator_pfx_password="my_pfx_password",
 )
 network_id = "my_new_networkid"
-new_network = Network(
-    dns=DNS(dhcp_server_enabled=True, enable_caching=True, local_ttl=0),
-    cellular=Cellular(
-        epc=EPC(
+new_network = LTENetwork(
+    dns=NetworkDNSConfig(dhcp_server_enabled=True, enable_caching=True, local_ttl=0),
+    cellular=NetworkCellularConfigs(
+        epc=NetworkEPCConfigs(
             gx_gy_relay_enabled=True,
             hss_relay_enabled=False,
             lte_auth_amf="gAA=",
@@ -35,11 +34,10 @@ new_network = Network(
             mnc="01",
             tac=1,
         ),
-        ran=RAN(
+        ran=NetworkRANConfigs(
             bandwidth_mhz=20,
             tdd_config=TDDConfig(
                 earfcndl=44590,
-                earfcnul=18000,
                 special_subframe_pattern=7,
                 subframe_assignment=2,
             ),

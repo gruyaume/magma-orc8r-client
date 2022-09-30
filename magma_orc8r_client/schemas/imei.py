@@ -1,12 +1,11 @@
 # Copyright 2022 Guillaume Belanger
 # See LICENSE file for licensing details.
 
-
-from typing import Dict
+from typing import Optional
 
 from pydantic import BaseModel
 
 
-class RAN(BaseModel):
-    bandwidth_mhz: int
-    tdd_config: Dict
+class IMEI(BaseModel):
+    snr: Optional[str] = None
+    tac: str

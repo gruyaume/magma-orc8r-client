@@ -78,3 +78,13 @@ class BaseEndpoint:
             response = requests.post(url=url, cert=cert, json=data, verify=False)
             response.raise_for_status()
             return response
+
+    def base_delete(self, command: str = None) -> requests.Response:
+        if command:
+            url = f"{self.base_url}{self.endpoint}/{command}"
+        else:
+            url = f"{self.base_url}{self.endpoint}"
+        with pfx_to_pem(self.admin_operator_pfx_path, self.admin_operator_pfx_password) as cert:
+            response = requests.delete(url=url, cert=cert, verify=False)
+            response.raise_for_status()
+            return response

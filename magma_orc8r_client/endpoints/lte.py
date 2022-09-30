@@ -4,7 +4,8 @@
 from typing import List
 
 from endpoints.base_endpoint import BaseEndpoint
-from schemas.network import Network
+from schemas.lte_network import LTENetwork
+from schemas.network_cellular_configs import NetworkCellularConfigs
 
 
 class LteApi(BaseEndpoint):
@@ -22,9 +23,17 @@ class LteApi(BaseEndpoint):
         response = super().base_get()
         return response.json()
 
-    def get(self, network_id: str) -> Network:
+    def get(self, network_id: str) -> LTENetwork:
         response = super().base_get(network_id)
-        return Network(**response.json())
+        print(response.json())
+        return LTENetwork(**response.json())
 
-    def create(self, network: Network) -> None:
-        super().base_post(data=network.dict())
+    def create(self, lte_network: LTENetwork) -> None:
+        super().base_post(data=lte_network.dict())
+
+    def delete(self, network_id: str) -> None:
+        super().base_delete(command=network_id)
+
+    def get_cellular(self, network_id: str) -> NetworkCellularConfigs:
+        response = super().base_get(f"{network_id}/cellular")
+        return NetworkCellularConfigs(**response.json())

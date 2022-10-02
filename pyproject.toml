@@ -4,8 +4,8 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "magma-orc8r-client"
-version = "1.0.3"
-description = "API Client to communicate with Magma Orchestrator"
+version = "1.0.4"
+description = "A simple client to communicate with Magma Orchestrator"
 readme = "README.md"
 authors = [{ name = "Guillaume Belanger", email = "guillaume.belanger27@gmail.com" }]
 license = { file = "LICENSE" }

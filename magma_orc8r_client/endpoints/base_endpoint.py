@@ -1,6 +1,7 @@
 # Copyright 2022 Guillaume Belanger
 # See LICENSE file for licensing details.
 
+import logging
 from contextlib import contextmanager
 from pathlib import Path
 from tempfile import NamedTemporaryFile
@@ -18,6 +19,8 @@ from cryptography.hazmat.primitives.serialization.pkcs12 import (
 )
 
 urllib3.disable_warnings()
+
+logger = logging.getLogger(__name__)
 
 
 @contextmanager
@@ -50,41 +53,45 @@ class BaseEndpoint:
     def __init__(
         self,
         base_url: str,
-        endpoint: str,
         admin_operator_pfx_path: str,
         admin_operator_pfx_password: str,
+        base_endpoint: str = "",
     ):
         self.base_url = base_url
-        self.endpoint = endpoint
+        self.base_endpoint = base_endpoint
         self.admin_operator_pfx_path = admin_operator_pfx_path
         self.admin_operator_pfx_password = admin_operator_pfx_password
 
-    def base_get(self, command: str = "") -> requests.Response:
-        if command:
-            url = f"{self.base_url}{self.endpoint}/{command}"
+    def get(self, endpoint: str = None) -> requests.Response:
+        if endpoint and endpoint != "":
+            url = f"{self.base_url}{self.base_endpoint}{endpoint}"
         else:
-            url = f"{self.base_url}{self.endpoint}"
+            url = f"{self.base_url}{self.base_endpoint}"
         with pfx_to_pem(self.admin_operator_pfx_path, self.admin_operator_pfx_password) as cert:
             response = requests.get(url=url, cert=cert, verify=False)
             response.raise_for_status()
             return response
 
-    def base_post(self, data: dict, command: str = None) -> requests.Response:
-        if command:
-            url = f"{self.base_url}{self.endpoint}/{command}"
+    def post(self, data: dict, endpoint: str = None) -> requests.Response:
+        if endpoint:
+            url = f"{self.base_url}{self.base_endpoint}/{endpoint}"
         else:
-            url = f"{self.base_url}{self.endpoint}"
+            url = f"{self.base_url}{self.base_endpoint}"
         with pfx_to_pem(self.admin_operator_pfx_path, self.admin_operator_pfx_password) as cert:
             response = requests.post(url=url, cert=cert, json=data, verify=False)
             response.raise_for_status()
             return response
 
-    def base_delete(self, command: str = None) -> requests.Response:
-        if command:
-            url = f"{self.base_url}{self.endpoint}/{command}"
+    def delete(self, endpoint: str = None) -> requests.Response:
+        if endpoint:
+            url = f"{self.base_url}{self.base_endpoint}/{endpoint}"
         else:
-            url = f"{self.base_url}{self.endpoint}"
+            url = f"{self.base_url}{self.base_endpoint}"
         with pfx_to_pem(self.admin_operator_pfx_path, self.admin_operator_pfx_password) as cert:
             response = requests.delete(url=url, cert=cert, verify=False)
-            response.raise_for_status()
+            try:
+                response.raise_for_status()
+            except Exception as e:
+                logger.info(response.text)
+                raise e
             return response

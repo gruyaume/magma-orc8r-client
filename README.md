@@ -8,6 +8,8 @@ pip3 install magma-orc8r-client
 
 ## Usage
 
+### Leveraging built-in methods
+
 ```python
 from magma_orc8r_client.orchestrator import Orc8r
 from magma_orc8r_client.schemas.network_dns_config import NetworkDNSConfig
@@ -48,7 +50,21 @@ new_network = LTENetwork(
     name=network_id,
 )
 
-orc8r_client.lte.create(network=new_network)
+orc8r_client.lte.create_network(lte_network=new_network)
 
 list_of_networks = orc8r_client.lte.list()
+```
+
+### Custom calls
+
+```python
+from magma_orc8r_client.orchestrator import Orc8r
+
+orc8r_client = Orc8r(
+    url="https://api.magma.com",
+    admin_operator_pfx_path="/path/to/admin_operator.pfx",
+    admin_operator_pfx_password="my_pfx_password",
+)
+network_id = "pizza"
+apn_list = orc8r_client.get(endpoint=f"lte/{network_id}/apns")
 ```

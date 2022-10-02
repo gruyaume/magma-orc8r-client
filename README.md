@@ -1,5 +1,10 @@
 # magma-orc8r-client
 
+A simple API client to communicate with [Magma](https://magmacore.org/)'s orchestrator service via HTTP.
+
+> **warning**: This project is under construction!
+
+
 ## Installation
 
 ```bash
